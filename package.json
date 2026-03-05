@@ -1,7 +1,6 @@
 {
   "name": "portfolio",
   "private": true,
-  "homepage": "https://github.com/IlyosbekKarimov/portfolio",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

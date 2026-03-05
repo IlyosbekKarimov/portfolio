@@ -16,5 +16,4 @@ export default defineConfig({
       '#windows': resolve(dirname(fileURLToPath(import.meta.url)), 'src/windows'),
     }
   },
-  base: "/portfolio/"
 });
