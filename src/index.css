@@ -40,15 +40,11 @@ body {
     @apply flex justify-between items-center bg-white/50 backdrop-blur-3xl p-2 px-5 select-none;
 
     div {
-      @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
-
-      &:last-child {
-        @apply max-sm:hidden;
-      }
+      @apply flex items-center gap-5;
     }
 
     ul {
-      @apply flex items-center gap-5 max-sm:hidden;
+      @apply flex items-center gap-5;
 
       p {
         @apply text-sm cursor-pointer hover:underline transition-all;
@@ -67,19 +63,11 @@ body {
   }
 
   #welcome {
-    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none max-sm:h-screen max-sm:w-full max-sm:px-10;
-
-    .small-screen {
-      @apply sm:hidden m-7 bg-red-300/20 backdrop-blur-lg p-3 rounded-md absolute top-10;
-
-      p {
-        @apply flex-1 text-[16px] text-center font-roboto text-gray-400;
-      }
-    }
+    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none;
   }
 
   #dock {
-    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
+    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none;
 
     .dock-container {
       @apply bg-white/20 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
@@ -377,7 +365,7 @@ body {
   }
 
   #home {
-    @apply relative z-0 max-sm:hidden;
+    @apply relative z-0;
 
     ul {
       li {
@@ -391,6 +379,393 @@ body {
           @apply text-sm text-white text-center px-1 rounded-md group-hover:bg-blue-500 transition-colors max-w-40;
         }
       }
+    }
+  }
+}
+/* ---------------------------------------------------------------------------
+   iOS layer — everything below renders instead of the macOS desktop on phones.
+   --------------------------------------------------------------------------- */
+@layer components {
+  #ios {
+    @apply relative w-dvw h-dvh overflow-hidden font-georama text-white select-none;
+
+    --status-bar-height: calc(env(safe-area-inset-top, 0px) + 2.9rem);
+    --home-indicator-height: calc(env(safe-area-inset-bottom, 0px) + 1.6rem);
+
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #status-bar {
+    @apply fixed top-0 inset-x-0 z-300 flex items-center justify-between px-6 pb-2 pointer-events-none transition-colors duration-300;
+
+    padding-top: max(0.7rem, env(safe-area-inset-top));
+
+    &.on-dark {
+      @apply text-white;
+    }
+
+    &.on-light {
+      @apply text-black;
+    }
+
+    time {
+      @apply text-[15px] font-semibold tracking-tight tabular-nums;
+    }
+
+    .island {
+      @apply w-24 h-7 rounded-full bg-black;
+    }
+
+    .indicators {
+      @apply flex items-center gap-1.5;
+    }
+
+    .signal {
+      @apply flex items-end gap-[2px] h-3.5;
+
+      i {
+        @apply w-[3px] rounded-[1px] bg-current;
+      }
+    }
+  }
+
+  #home-indicator {
+    @apply fixed bottom-0 inset-x-0 z-300 flex justify-end flex-col items-center transition-colors duration-300;
+
+    height: var(--home-indicator-height);
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+
+    &.on-dark {
+      @apply text-white/70;
+    }
+
+    &.on-light {
+      @apply text-black/80;
+    }
+
+    span {
+      @apply block w-32 h-[5px] rounded-full bg-current;
+    }
+  }
+
+  #home-screen {
+    @apply absolute inset-0 flex flex-col px-6 overflow-hidden;
+
+    padding-top: calc(var(--status-bar-height) + 0.5rem);
+    padding-bottom: var(--home-indicator-height);
+
+    /* The dock stays pinned; only the icon pages scroll when a short viewport runs out of room. */
+    .pages {
+      @apply flex-1 min-h-0 flex flex-col gap-5 overflow-y-auto;
+
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        @apply hidden;
+      }
+    }
+
+    .widget {
+      @apply flex items-center gap-4 w-full text-left p-4 rounded-[26px] bg-white/15 backdrop-blur-2xl border border-white/20 shadow-2xl transition-transform duration-200 active:scale-[0.97];
+
+      img {
+        @apply size-16 rounded-2xl object-cover;
+      }
+
+      .date {
+        @apply text-[11px] font-medium uppercase tracking-[0.14em] text-white/60;
+      }
+
+      h2 {
+        @apply text-lg font-semibold leading-tight mt-0.5;
+      }
+
+      .role {
+        @apply text-[13px] text-white/70;
+      }
+
+      .status {
+        @apply mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium text-emerald-100 bg-emerald-400/20 border border-emerald-300/30;
+
+        i {
+          @apply size-1.5 rounded-full bg-emerald-300;
+        }
+      }
+    }
+
+    .app-grid {
+      @apply grid grid-cols-4 gap-x-4 gap-y-4;
+    }
+
+    .project-strip {
+      @apply flex-none;
+
+      .label {
+        @apply mb-2 px-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60;
+      }
+
+      ul {
+        @apply flex gap-3 overflow-x-auto pb-1;
+
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          @apply hidden;
+        }
+      }
+
+      li {
+        @apply flex-none w-36;
+      }
+
+      button {
+        @apply block w-full overflow-hidden rounded-2xl bg-white/15 backdrop-blur-2xl border border-white/20 text-left transition-transform duration-200 active:scale-95;
+
+        img {
+          @apply w-full h-20 object-cover object-top;
+        }
+
+        i {
+          @apply flex-center w-full h-20 not-italic text-2xl font-bold text-white/50 bg-white/10;
+        }
+
+        span {
+          @apply block px-3 py-2 text-[12px] font-medium leading-tight truncate;
+        }
+      }
+    }
+
+    /* The shortest phones only have room for the widget, the icons and the dock. */
+    @media (max-height: 640px) {
+      .project-strip {
+        @apply hidden;
+      }
+    }
+
+    .page-dots {
+      @apply flex-center flex-none gap-1.5 py-3;
+
+      i {
+        @apply size-1.5 rounded-full bg-white/40;
+      }
+
+      .active {
+        @apply bg-white;
+      }
+    }
+  }
+
+  .app-tile {
+    @apply flex flex-col items-center gap-1.5;
+
+    .app-icon {
+      @apply flex-center size-14.5 text-white transition-transform duration-150 active:scale-90;
+
+      border-radius: 23%;
+      background-size: cover;
+      box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28), 0 8px 18px rgb(0 0 0 / 0.3);
+    }
+
+    p {
+      @apply text-[11px] font-medium text-center leading-tight;
+
+      text-shadow: 0 1px 3px rgb(0 0 0 / 0.55);
+    }
+  }
+
+  #dock-bar {
+    @apply flex-none p-3 rounded-4xl bg-white/15 backdrop-blur-2xl border border-white/20;
+
+    ul {
+      @apply grid grid-cols-4 gap-4;
+    }
+
+    .app-tile p {
+      @apply hidden;
+    }
+  }
+
+  .mobile-app {
+    @apply fixed inset-0 z-200 hidden flex-col overflow-hidden bg-[#f2f2f7] text-[#1c1c1e];
+  }
+
+  .app-header {
+    @apply flex-none px-5 pb-3 bg-white/80 backdrop-blur-xl border-b border-black/5 cursor-grab;
+
+    padding-top: var(--status-bar-height);
+
+    .bar {
+      @apply flex items-center justify-between h-9;
+    }
+
+    .back {
+      @apply flex items-center -ms-1.5 text-[#007aff] transition-opacity active:opacity-50;
+
+      span {
+        @apply -ms-0.5 text-[17px];
+      }
+    }
+
+    .header-action {
+      @apply flex items-center gap-1 text-[15px] font-semibold text-[#007aff] transition-opacity active:opacity-50;
+    }
+
+    h1 {
+      @apply mt-1 text-[28px] font-bold tracking-tight leading-tight wrap-break-word;
+    }
+
+    p {
+      @apply mt-1 text-[13px] leading-snug text-black/50;
+    }
+  }
+
+  .app-body {
+    @apply flex-1 overflow-y-auto px-4 pt-4 space-y-5;
+
+    padding-bottom: calc(var(--home-indicator-height) + 1.5rem);
+    overscroll-behavior: contain;
+
+    .hero {
+      @apply w-full max-h-96 rounded-2xl object-cover;
+    }
+
+    .prose {
+      @apply space-y-3 text-[15px] leading-relaxed text-black/75;
+    }
+
+    .actions {
+      @apply space-y-3;
+    }
+
+    .hint {
+      @apply py-10 text-center text-[13px] text-black/40;
+    }
+  }
+
+  .viewer {
+    @apply flex-center bg-black;
+
+    padding: 0;
+
+    img {
+      @apply max-w-full max-h-full object-contain;
+    }
+  }
+
+  .btn-primary {
+    @apply flex-center gap-2 w-full py-3.5 rounded-2xl bg-[#007aff] text-[15px] font-semibold text-white transition-opacity active:opacity-70;
+  }
+
+  .btn-secondary {
+    @apply flex-center gap-2 w-full py-3.5 rounded-2xl bg-white text-[15px] font-semibold text-[#007aff] transition-colors active:bg-black/5;
+  }
+
+  .row-group {
+    @apply bg-white rounded-2xl overflow-hidden divide-y divide-black/5;
+
+    li > * {
+      @apply flex items-center gap-3.5 w-full text-left px-4 py-3 transition-colors active:bg-black/5;
+    }
+
+    .thumb {
+      @apply flex-center flex-none size-12 rounded-xl overflow-hidden bg-[#e5e5ea] text-white;
+
+      img {
+        @apply size-full object-cover;
+      }
+
+      i {
+        @apply text-lg font-bold not-italic text-black/40;
+      }
+
+      &.tint {
+        background-size: cover;
+      }
+
+      /* Wide crop for browser screenshots, which read badly in a square. */
+      &.wide {
+        @apply w-17 h-12 rounded-lg;
+      }
+    }
+
+    .meta {
+      @apply flex flex-col flex-1 min-w-0;
+
+      strong {
+        @apply text-[15px] font-semibold truncate;
+      }
+
+      small {
+        @apply text-[12px] text-black/50 truncate;
+      }
+    }
+
+    .chevron {
+      @apply flex-none text-black/25;
+    }
+  }
+
+  .profile-card {
+    @apply flex items-center gap-4 p-4 rounded-2xl bg-white;
+
+    img {
+      @apply size-16 rounded-full object-cover;
+    }
+
+    strong {
+      @apply block text-[17px] font-semibold;
+    }
+
+    small {
+      @apply text-[13px] text-black/50;
+    }
+  }
+
+  .stack-list {
+    @apply space-y-3;
+
+    .card {
+      @apply p-4 rounded-2xl bg-white;
+    }
+
+    .card-head {
+      @apply flex items-center gap-2.5;
+
+      .badge {
+        @apply flex-center size-5 rounded-full bg-[#34c759] text-white;
+      }
+
+      h3 {
+        @apply text-[15px] font-semibold;
+      }
+    }
+
+    .chips {
+      @apply flex flex-wrap gap-2 mt-3;
+
+      li {
+        @apply px-2.5 py-1 rounded-lg bg-[#f2f2f7] text-[13px] font-medium text-black/70;
+      }
+    }
+  }
+
+  .photo-grid {
+    @apply grid grid-cols-2 gap-2.5;
+
+    button {
+      @apply block w-full aspect-square rounded-2xl overflow-hidden bg-black/5 transition-opacity active:opacity-70;
+    }
+
+    img {
+      @apply size-full object-cover;
+    }
+  }
+
+  .pdf {
+    @apply flex-center;
+
+    .react-pdf__Page {
+      @apply rounded-2xl overflow-hidden shadow-md;
     }
   }
 }

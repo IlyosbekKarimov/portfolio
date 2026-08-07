@@ -132,6 +132,7 @@ const socials = [
     text: "Github",
     icon: "icons/github.svg",
     bg: "#f4656b",
+    gradient: "linear-gradient(160deg, #4d5560 0%, #16191d 100%)",
     link: "https://github.com/ilyosbekKarimov",
   },
   {
@@ -139,6 +140,7 @@ const socials = [
     text: "Telegram",
     icon: "icons/telegram.svg",
     bg: "#4bcb63",
+    gradient: "linear-gradient(160deg, #40bdf5 0%, #0f7fc2 100%)",
     link: "https://t.me/Karimov_I_G",
   },
   {
@@ -146,6 +148,7 @@ const socials = [
     text: "Youtube",
     icon: "icons/youtube.svg",
     bg: "#ff866b",
+    gradient: "linear-gradient(160deg, #ff6b60 0%, #d40a0a 100%)",
     link: "http://www.youtube.com/@CyberSpace2004",
   },
   {
@@ -153,6 +156,7 @@ const socials = [
     text: "LinkedIn",
     icon: "icons/linkedin.svg",
     bg: "#05b6f6",
+    gradient: "linear-gradient(160deg, #3a91e0 0%, #054d94 100%)",
     link: "https://www.linkedin.com/in/ilyas-karimov-48bbaa275",
   },
 ];
@@ -204,6 +208,89 @@ const gallery = [
   },
 ];
 
+const profile = {
+  name: "Ilyosbek Karimov",
+  role: "Software Developer",
+  avatar: "images/avatar.png",
+  status: "Open to work",
+};
+
+const RESUME_FILE = "files/Karimov_Ilyos.pdf";
+
+/** Anything narrower than Tailwind's `md` gets the iOS layout instead of the macOS desktop. */
+const MOBILE_BREAKPOINT = "(max-width: 767px)";
+
+/** Home screen apps. `dock: true` pins the app to the bottom dock instead of the icon grid. */
+const mobileApps = [
+  {
+    id: "projects",
+    name: "Projects",
+    gradient: "linear-gradient(160deg, #63b3ff 0%, #0a63d6 100%)",
+    dock: true,
+  },
+  {
+    id: "skills",
+    name: "Skills",
+    gradient: "linear-gradient(160deg, #5b6472 0%, #1b1e24 100%)",
+    dock: true,
+  },
+  {
+    id: "resume",
+    name: "Resume",
+    gradient: "linear-gradient(160deg, #ff9a5a 0%, #e63523 100%)",
+    dock: true,
+  },
+  {
+    id: "contact",
+    name: "Contact",
+    gradient: "linear-gradient(160deg, #6ce585 0%, #0d9e39 100%)",
+    dock: true,
+  },
+  {
+    id: "about",
+    name: "About",
+    gradient: "linear-gradient(160deg, #c586fb 0%, #6d28d9 100%)",
+  },
+  {
+    id: "gallery",
+    name: "Gallery",
+    gradient: "linear-gradient(160deg, #fbbf24 0%, #f43f5e 100%)",
+  },
+];
+
+const mobilePhotos = [
+  {
+    id: 1,
+    name: "Portrait",
+    src: "images/ilyosbek.png",
+  },
+  {
+    id: 2,
+    name: "Off the clock",
+    src: "images/casualmeme.png",
+  },
+  {
+    id: 3,
+    name: "Conference",
+    src: "images/conferencememe.png",
+  },
+  {
+    id: 4,
+    name: "Formal portrait",
+    src: "images/meme.png",
+  },
+  {
+    id: 5,
+    name: "Bank asset management",
+    src: "images/bankassetmanagement.png",
+  },
+  {
+    id: 6,
+    name: "KPI system",
+    src: "images/kpisamduufuz.png",
+  },
+];
+
 export {
   navLinks,
   navIcons,
@@ -213,6 +300,11 @@ export {
   socials,
   photosLinks,
   gallery,
+  profile,
+  mobileApps,
+  mobilePhotos,
+  MOBILE_BREAKPOINT,
+  RESUME_FILE,
 };
 
 const WORK_LOCATION = {
@@ -490,6 +582,24 @@ export const locations = {
   trash: TRASH_LOCATION,
 };
 
+// Placeholder links live in the finder data as "#", which is not worth rendering as a link.
+const resolveHref = (value) => (value && value !== "#" ? value : null);
+const childOf = (project, fileType) => project.children?.find((child) => child.fileType === fileType);
+
+/** Flat, presentation-ready view of `locations.work` — the finder tree squashed into project cards. */
+const projects = WORK_LOCATION.children.map((project) => {
+  const details = childOf(project, "txt");
+
+  return {
+    id: project.id,
+    name: project.name,
+    cover: resolveHref(childOf(project, "img")?.imageUrl),
+    href: resolveHref(childOf(project, "url")?.href),
+    design: resolveHref(childOf(project, "fig")?.href),
+    description: details?.description ?? [],
+  };
+});
+
 const INITIAL_Z_INDEX = 1000;
 
 const WINDOW_CONFIG = {
@@ -503,4 +613,4 @@ const WINDOW_CONFIG = {
   imgfile: { isOpen: false, zIndex: INITIAL_Z_INDEX, data: null },
 };
 
-export { INITIAL_Z_INDEX, WINDOW_CONFIG };
+export { INITIAL_Z_INDEX, WINDOW_CONFIG, projects };

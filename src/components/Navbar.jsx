@@ -1,15 +1,16 @@
-import { navIcons, navLinks } from "#constants";
+import { navIcons, navLinks, profile } from "#constants";
+import { useClock } from "#hooks";
 import useWindowStore from "#store/window";
-import dayjs from "dayjs";
 
 const Navbar = () => {
     const { openWindow } = useWindowStore();
+    const time = useClock("ddd MMM D h:mm A");
 
     return (
         <nav>
             <div>
                 <img src="images/logo.svg" alt="logo" />
-                <p className="font-bold">Ilyosbek Karimov | Portfolio</p>
+                <p className="font-bold">{profile.name} | Portfolio</p>
 
                 <ul>
                     {navLinks.map(({ id, name, type }) => (
@@ -29,7 +30,7 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                <time>{dayjs().format("ddd MMM D h:mm A")}</time>
+                <time>{time}</time>
             </div>
         </nav>
     );
